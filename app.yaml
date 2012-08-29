@@ -1,8 +1,13 @@
-application: psnserver
+application: psnserverapi
 version: 1
 runtime: python
 api_version: 1
  
 handlers:
+
+- url: /wsdl
+  static_dir: wsdl
+
 - url: /.*
   script: echo.py
+  

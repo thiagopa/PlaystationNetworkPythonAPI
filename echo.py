@@ -1,7 +1,7 @@
 import sys
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from EchoServer_server import *
+from EchoServer_client import *
 from ZSI.twisted.wsgi import SOAPApplication, soapmethod, SOAPHandlerChainFactory, WSGIApplication
  
 class EchoService(SOAPApplication):

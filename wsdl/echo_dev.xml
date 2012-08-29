@@ -49,7 +49,7 @@
  
   <service name="EchoServer">
     <port name="EchoServer" binding="tns:EchoServer">
-      <soap:address location="http://localhost:7000/echo"/>
+      <soap:address location="http://localhost:8080/echo"/>
     </port>
   </service>
 
