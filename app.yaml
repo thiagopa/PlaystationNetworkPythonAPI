@@ -1,5 +1,5 @@
 application: psnserverapi
-version: 1
+version: 2
 runtime: python
 api_version: 1
  
@@ -9,5 +9,5 @@ handlers:
   static_dir: wsdl
 
 - url: /.*
-  script: echo.py
+  script: PlaystationNetworkAPI_server.py
   

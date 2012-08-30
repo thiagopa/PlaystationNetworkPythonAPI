@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="PlaystationNetworkAPI" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="PlaystationNetworkAPISoap" type="wsdl" bindingName="{urn:PSN}PlaystationNetworkAPISoap" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml"><con:part><con:url>http://localhost:8080/wsdl/PlaystationNetworkAPI.xml</con:url><con:content><![CDATA[<definitions targetNamespace="urn:PSN" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:PSN">
+  <types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="urn:PSN">
+      <xsd:element name="GetProfile">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="psnId" type="xsd:string"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="location" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetProfileResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="GetProfileResult" type="tns:Profile"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="Profile">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Location" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="PsnId" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="AvatarSmall" type="xsd:string"/>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Level" nillable="true" type="xsd:int"/>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Progress" nillable="true" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="TrophyCount" type="tns:TrophyCount"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="PlayedGames" type="tns:ArrayOfPlayedGame"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TrophyCount">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Platinum" nillable="true" type="xsd:int"/>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Gold" nillable="true" type="xsd:int"/>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Silver" nillable="true" type="xsd:int"/>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Bronze" nillable="true" type="xsd:int"/>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Total" nillable="true" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfPlayedGame">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="PlayedGame" nillable="true" type="tns:PlayedGame"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PlayedGame">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="tns:Game">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Progress" nillable="true" type="xsd:int"/>
+              <xsd:element minOccurs="0" maxOccurs="1" name="TrophyCount" type="tns:TrophyCount"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="Game">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Id" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Title" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Image" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="Profile" nillable="true" type="tns:Profile"/>
+    </xsd:schema>
+  </types>
+  <message name="GetProfileSoapIn">
+    <part name="parameters" element="tns:GetProfile"/>
+  </message>
+  <message name="GetProfileSoapOut">
+    <part name="parameters" element="tns:GetProfileResponse"/>
+  </message>
+  <portType name="PlaystationNetworkAPISoap">
+    <operation name="GetProfile">
+      <input message="tns:GetProfileSoapIn"/>
+      <output message="tns:GetProfileSoapOut"/>
+    </operation>
+  </portType>
+  <binding name="PlaystationNetworkAPISoap" type="tns:PlaystationNetworkAPISoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetProfile">
+      <soap:operation soapAction="GetProfile"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="PlaystationNetworkAPI">
+    <port name="PlaystationNetworkAPISoap" binding="tns:PlaystationNetworkAPISoap">
+      <soap:address location="http://localhost:8080/PlaystationNetworkAPI"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/PlaystationNetworkAPI</con:endpoint></con:endpoints><con:operation isOneWay="false" action="GetProfile" name="GetProfile" bindingOperationName="GetProfile" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/PlaystationNetworkAPI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:PSN">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:GetProfile>
+         <!--Optional:-->
+         <urn:psnId>thi_pag</urn:psnId>
+         <!--Optional:-->
+         <urn:location>?</urn:location>
+      </urn:GetProfile>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="GetProfile"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/></con:soapui-project>
