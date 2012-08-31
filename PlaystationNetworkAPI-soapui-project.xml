@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="PlaystationNetworkAPI" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="PlaystationNetworkAPISoap" type="wsdl" bindingName="{urn:PSN}PlaystationNetworkAPISoap" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml"><con:part><con:url>http://localhost:8080/wsdl/PlaystationNetworkAPI.xml</con:url><con:content><![CDATA[<definitions targetNamespace="urn:PSN" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:PSN">
+<con:soapui-project activeEnvironment="Default" name="PlaystationNetworkAPI" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="PlaystationNetworkAPISoap" type="wsdl" bindingName="{urn:PSN}PlaystationNetworkAPISoap" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml"><con:part><con:url>http://localhost:8080/wsdl/PlaystationNetworkAPI.xml</con:url><con:content><![CDATA[<definitions targetNamespace="urn:PSN" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:PSN">
   <types>
     <xsd:schema elementFormDefault="qualified" targetNamespace="urn:PSN">
       <xsd:element name="GetProfile">
@@ -96,7 +96,7 @@
    <soapenv:Body>
       <urn:GetProfile>
          <!--Optional:-->
-         <urn:psnId>thi_pag</urn:psnId>
+         <urn:psnId >thi_pag</urn:psnId>
          <!--Optional:-->
          <urn:location>?</urn:location>
       </urn:GetProfile>
