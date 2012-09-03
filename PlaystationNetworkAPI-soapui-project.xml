@@ -98,7 +98,7 @@
          <!--Optional:-->
          <urn:psnId >thi_pag</urn:psnId>
          <!--Optional:-->
-         <urn:location>?</urn:location>
+         <urn:location>BR</urn:location>
       </urn:GetProfile>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="GetProfile"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/></con:soapui-project>
