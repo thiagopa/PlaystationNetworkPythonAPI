@@ -168,6 +168,10 @@ class CrawlerService(Service):
         
         logger.info("Parsing Trophies")
         GetProfileResult.PsnId = trophies.PsnId()
+        GetProfileResult.Location = location
+        GetProfileResult.AvatarSmall = trophies.AvatarSmall()
+        GetProfileResult.Level = trophies.Level()
+        GetProfileResult.Progress = trophies.Progress()
 
         return GetProfileResult
              
