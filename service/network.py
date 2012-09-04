@@ -28,8 +28,14 @@ class TrophiePageParser:
     def PsnId(self):
         return self._soup.find('div', id="id-handle" ).contents
         
-         
-
+    def AvatarSmall(self) :
+        return self._soup.find('div', id="id-avatar" ).find('img')['src']
+        
+    def Level(self) :
+        return self._soup.find('div', id="leveltext" ).contents
+        
+    def Progress(self) :     
+        return self._soup.find('div', class="progresstext").contents
 
 #        try:
 #            self._avatar = soup.find('div', {'class' : 'avatar'}).find('img')['src'].split('=', 1)[1]
