@@ -54,12 +54,8 @@ class PSN:
         self._opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self._cookie_jar))
         
         logger.info("Finish PSN init")
-
-    @property
-    def handle(self):
-        if not self._handle:
-            self._login()
-        return self._handle
+        
+        self._login()
 
     def _login(self):
         logger.info("Logging in")
@@ -97,8 +93,6 @@ class PSN:
 
 
     def trophies(self,psnId):
-        if self._handle is None:
-            self._login()
 
         logger.info("Getting Trophies")
 
