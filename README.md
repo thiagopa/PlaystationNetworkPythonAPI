@@ -10,3 +10,5 @@ Project Requires:
 http://pypi.python.org/pypi/zope.interface/3.6.7#downloads
 
 http://sourceforge.net/projects/pywebsvcs/files/ZSI/ZSI-2.1_a1/
+
+http://www.crummy.com/software/BeautifulSoup/bs4/download/

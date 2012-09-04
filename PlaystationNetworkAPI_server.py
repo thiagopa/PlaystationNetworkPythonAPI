@@ -4,23 +4,31 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from PlaystationNetworkAPI_client import *
 from ZSI.twisted.wsgi import SOAPApplication, soapmethod, SOAPHandlerChainFactory, WSGIApplication
 
-from service.services import DummyService
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+from service.services import *
  
 class PlaystationNetworkAPIService(SOAPApplication):
-    #factory = SOAPHandlerChainFactory
-    #wsdl_content = dict(name='PlaystationNetworkAPI', targetNamespace='urn:PSN', imports=(), portType="")
  
     _wsdl = "".join(open("PlaystationNetworkAPI.wsdl").readlines())
     _noget = "".join(open("noget.html").readlines())
  
-    @soapmethod(GetProfileSoapIn.typecode, GetProfileSoapOut.typecode, operation='GetProfile', soapaction='GetProfile')
+    @soapmethod(GetProfileSoapIn.typecode, GetProfileSoapOut.typecode, operation='GetProfile', soapaction='GetProfile' )
     def soap_GetProfile(self, request, response, **kw):
         
-        result = DummyService(response.new_GetProfileResult).GetProfile(request._psnId,request._location)
+        logger.info("Creating CrawlerService & GetProfile")
+        
+        result = CrawlerService().GetProfile(request._psnId,request._location)
+        #result = DummyService().GetProfile(request._psnId,request._location)
+        
+        logger.info("Returning Response")
         
         response.GetProfileResult = result
         
-        return request,response
+        return request, response 
     
     def _handle_GET(self, env, start_response):
         if env['QUERY_STRING'].lower() == 'wsdl':

@@ -1,4 +1,17 @@
 #-*- coding: utf-8 -*-
+
+from network import PSN
+import logging
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from PlaystationNetworkAPI_client import *
+
+logger = logging.getLogger(__name__)
+
+
 class Service:
     """
         Interface para os Outros Serviços
@@ -7,12 +20,8 @@ class Service:
         raise NotImplementedError( "Should have implemented this" )
     
     def GetProfileResult(self):
-        self.GetProfileResult
+        return GetProfileSoapOut().new_GetProfileResult()
     
-    def __init__(self, GetProfileResult):
-        self.GetProfileResult = GetProfileResult
-            
-
 class DummyService(Service):
     """
         Serviço de testes que retorna sempre um resultado fixo
@@ -89,7 +98,7 @@ class DummyService(Service):
         Skyrim.Id = "784100-Skyrim"
         Skyrim.Title = "Skyrim"
         Skyrim.Image = "http://trophy01.np.community.playstation.net/trophy/np/NPWR02631_00_95497FBD204F38224C6536E9D88098D62FF3DA33/1A9A3826FB6B42C1B08824655A740620BC8E75F9.PNG"
-        Skyrim.Progress = 48          
+        Skyrim.Progress = 49          
         
         SkyrimTrophyCount = Skyrim.new_TrophyCount()
         SkyrimTrophyCount.Platinum = 0
@@ -140,5 +149,22 @@ class DummyService(Service):
         return GetProfileResult
 
      
-     
+class CrawlerService(Service):
+    """
+        Serviço que busca as informações do site americano
+    """
+    def GetProfile(self,psn_id,location):
+        logger.info("Creating new GetProfileResult")
+        GetProfileResult = self.GetProfileResult()
+        
+        logger.info("Input Credentials")
+        psn = PSN(email="", passwd="")
+        
+        logger.info("Getting Trophies")
+        trophies = psn.trophies(psn_id)
+        
+        logger.info("Parsing Trophies")
+        GetProfileResult.PsnId = trophies.PsnId()
+
+        return GetProfileResult
              
