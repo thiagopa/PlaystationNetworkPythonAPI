@@ -157,8 +157,11 @@ class CrawlerService(Service):
         logger.info("Creating new GetProfileResult")
         GetProfileResult = self.GetProfileResult()
         
-        logger.info("Input Credentials")
-        psn = PSN(email="", passwd="")
+        logger.info("Retrieving Credentials")
+        psn_credential = retrieve_psn_credentials()
+        
+        logger.info("Input Credentials to PSN")
+        psn = PSN(email=psn_credential.email, passwd=psn_credential.password)
         
         logger.info("Getting Trophies")
         trophies = psn.trophies(psn_id)
