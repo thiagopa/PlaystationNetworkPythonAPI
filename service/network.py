@@ -26,22 +26,16 @@ class TrophiePageParser:
         logger.info("Create BeautifulSoup for response %s" % (rs))
 
     def PsnId(self):
-        return self._soup.find('div', id="id-handle" ).contents
+        return self._soup.find('div', id="id-handle" ).contents[0].strip()
         
     def AvatarSmall(self) :
-        return self._soup.find('div', id="id-avatar" ).find('img')['src']
+        return self._soup.find('div', id="id-avatar" ).find('img')['src'].split('=',1)[1]
         
     def Level(self) :
-        return self._soup.find('div', id="leveltext" ).contents
+        return int(self._soup.find('div', id="leveltext" ).contents[0])
         
     def Progress(self) :     
-        return self._soup.find('div', class="progresstext").contents
-
-#        try:
-#            self._avatar = soup.find('div', {'class' : 'avatar'}).find('img')['src'].split('=', 1)[1]
-#        except:
-#            self._avatar = u''
-
+        return int(self._soup.find('div', {'class' : 'progresstext'} ).contents[0].split('%',1)[0])
 
 
 

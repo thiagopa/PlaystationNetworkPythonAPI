@@ -1,3 +1,6 @@
+"""
+    Guardar as informações de usuário e senha no banco 
+"""
 from google.appengine.ext import db
 
 class Credentials(db.Model):

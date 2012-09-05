@@ -9,6 +9,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from PlaystationNetworkAPI_client import *
 
+from service import *
+
 logger = logging.getLogger(__name__)
 
 
@@ -172,6 +174,8 @@ class CrawlerService(Service):
         GetProfileResult.AvatarSmall = trophies.AvatarSmall()
         GetProfileResult.Level = trophies.Level()
         GetProfileResult.Progress = trophies.Progress()
+
+
 
         return GetProfileResult
              
