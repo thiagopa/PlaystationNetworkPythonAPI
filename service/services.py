@@ -159,22 +159,67 @@ class CrawlerService(Service):
         logger.info("Creating new GetProfileResult")
         GetProfileResult = self.GetProfileResult()
         
-        logger.info("Retrieving Credentials")
+        logger.info("Retrieving Credentials from Database")
         psn_credential = retrieve_psn_credentials()
         
         logger.info("Input Credentials to PSN")
         psn = PSN(email=psn_credential.email, passwd=psn_credential.password)
         
-        logger.info("Getting Trophies")
+        logger.info("Getting Trophies Page Parser")
         trophies = psn.trophies(psn_id)
         
-        logger.info("Parsing Trophies")
+        logger.info("Parsing Profile Info")
         GetProfileResult.PsnId = trophies.PsnId()
         GetProfileResult.Location = location
         GetProfileResult.AvatarSmall = trophies.AvatarSmall()
         GetProfileResult.Level = trophies.Level()
         GetProfileResult.Progress = trophies.Progress()
 
+        logger.info("Parsing Trophie Count")
+        TrophyCount = GetProfileResult.new_TrophyCount()
+        
+        TrophyCount.Platinum = trophies.Platinum()
+        TrophyCount.Gold= trophies.Gold()
+        TrophyCount.Silver= trophies.Silver()
+        TrophyCount.Bronze= trophies.Bronze()
+        TrophyCount.Total= trophies.Total()
+        
+        GetProfileResult.TrophyCount = TrophyCount
+
+        logger.info("Getting Games Page Parser")
+        games = psn.games(psn_id)
+        
+        PlayedGames = GetProfileResult.new_PlayedGames()
+        
+        logger.info("Parsing Each Game Retrieved")
+        for game in games :
+            Game = PlayedGames.new_PlayedGame()
+            Game.Title = game.Title()
+            PlayedGames.PlayedGame.append(Game)
+        
+        GetProfileResult.PlayedGames = PlayedGames
+        
+        """
+        PlayedGames = GetProfileResult.new_PlayedGames()
+        
+        RedDeadRedemption = PlayedGames.new_PlayedGame() 
+        
+        RedDeadRedemption.Id = "590951-Red-Dead-Redemption"
+        RedDeadRedemption.Title = "Red Dead Redemption"
+        RedDeadRedemption.Image = "http://trophy01.np.community.playstation.net/trophy/np/NPWR00867_00_3C04BB5C8E8B922C223411F0E040983D86D4B864/27D02EB3579FF13B05CB8707B7B6C79AD14C6332.PNG"
+        RedDeadRedemption.Progress = 1          
+        
+        RedDeadRedemptionTrophyCount = RedDeadRedemption.new_TrophyCount()
+        RedDeadRedemptionTrophyCount.Platinum = 0
+        RedDeadRedemptionTrophyCount.Gold=0
+        RedDeadRedemptionTrophyCount.Silver=0
+        RedDeadRedemptionTrophyCount.Bronze=1
+        RedDeadRedemptionTrophyCount.Total=1
+
+        RedDeadRedemption.TrophyCount = RedDeadRedemptionTrophyCount
+
+        PlayedGames.PlayedGame = [ RedDeadRedemption, GTAIV, Rocksmith, Skyrim, DarkSouls, Wanted ]
+        """        
 
 
         return GetProfileResult

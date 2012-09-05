@@ -14,7 +14,7 @@ LOGIN_RETURN = "https://br.playstation.com/bruwps/PSNTicketRetrievalGenericServl
 TICKET_URL = "https://us.playstation.com/uwps/PSNTicketRetrievalGenericServlet?psnAuth=true&sessionId=%s";
 
 PSN_PROFILE = "http://us.playstation.com/playstation/psn/profiles/%s/trophies/";
-#PSN = "http://us.playstation.com/playstation/psn/profile/{0}/get_ordered_title_details_data";
+PSN_GAMES = "http://us.playstation.com/playstation/psn/profile/%s/get_ordered_trophies_data";
 
 HANDLE_URL = 'http://us.playstation.com/uwps/HandleIFrameRequests?sessionId=%s'
 COOKIE_HANDLER = 'http://us.playstation.com/uwps/CookieHandler'

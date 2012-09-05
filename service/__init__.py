@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 """
     Guardar as informações de usuário e senha no banco 
 """

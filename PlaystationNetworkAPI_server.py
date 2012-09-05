@@ -21,8 +21,8 @@ class PlaystationNetworkAPIService(SOAPApplication):
         
         logger.info("Creating CrawlerService & GetProfile")
         
-        #result = CrawlerService().GetProfile(request._psnId,request._location)
-        result = DummyService().GetProfile(request._psnId,request._location)
+        result = CrawlerService().GetProfile(request._psnId,request._location)
+        #result = DummyService().GetProfile(request._psnId,request._location)
         
         logger.info("Returning Response")
         
