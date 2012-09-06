@@ -194,33 +194,25 @@ class CrawlerService(Service):
         logger.info("Parsing Each Game Retrieved")
         for game in games :
             Game = PlayedGames.new_PlayedGame()
+            
+            Game.Id = game.Id()
             Game.Title = game.Title()
+            Game.Image = game.Image()
+            Game.Progress = game.Progress()
+            
+            GameTrophyCount = Game.new_TrophyCount()
+            
+            GameTrophyCount.Platinum = game.Platinum()
+            GameTrophyCount.Gold= game.Gold()
+            GameTrophyCount.Silver= game.Silver()
+            GameTrophyCount.Bronze= game.Bronze()
+            GameTrophyCount.Total= game.Total()
+            
+            Game.TrophyCount = GameTrophyCount
+            
             PlayedGames.PlayedGame.append(Game)
         
         GetProfileResult.PlayedGames = PlayedGames
-        
-        """
-        PlayedGames = GetProfileResult.new_PlayedGames()
-        
-        RedDeadRedemption = PlayedGames.new_PlayedGame() 
-        
-        RedDeadRedemption.Id = "590951-Red-Dead-Redemption"
-        RedDeadRedemption.Title = "Red Dead Redemption"
-        RedDeadRedemption.Image = "http://trophy01.np.community.playstation.net/trophy/np/NPWR00867_00_3C04BB5C8E8B922C223411F0E040983D86D4B864/27D02EB3579FF13B05CB8707B7B6C79AD14C6332.PNG"
-        RedDeadRedemption.Progress = 1          
-        
-        RedDeadRedemptionTrophyCount = RedDeadRedemption.new_TrophyCount()
-        RedDeadRedemptionTrophyCount.Platinum = 0
-        RedDeadRedemptionTrophyCount.Gold=0
-        RedDeadRedemptionTrophyCount.Silver=0
-        RedDeadRedemptionTrophyCount.Bronze=1
-        RedDeadRedemptionTrophyCount.Total=1
-
-        RedDeadRedemption.TrophyCount = RedDeadRedemptionTrophyCount
-
-        PlayedGames.PlayedGame = [ RedDeadRedemption, GTAIV, Rocksmith, Skyrim, DarkSouls, Wanted ]
-        """        
-
 
         return GetProfileResult
              
