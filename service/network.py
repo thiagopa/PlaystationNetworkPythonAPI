@@ -10,6 +10,7 @@ import gzip
 
 import os
 import sys
+import re
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -30,9 +31,14 @@ class BasePageParser:
     def _findById(self,id):
         return self._soup.find('div', id=id ).contents[0]
     
-    def _findByClass(self,className):
-        return self._soup.find('div', class_ = className ).contents[0]
+    def _findByElementClass(self,element,className) :
+        return self._soup.find(element, class_ = className).contents[0]
+    
+    def _findByDivClass(self,className):
+        return self._findByElementClass('div',className)
  
+    def _findBySpanClass(self,className) :
+        return self._findByElementClass('span',className)
 
 class TrophiePageParser(BasePageParser):
     """
@@ -52,22 +58,25 @@ class TrophiePageParser(BasePageParser):
         return int(self._findById("leveltext" ))
         
     def Progress(self) :     
-        return int(self._findByClass("progresstext").replace('%',''))
+        return int(self._findByDivClass("progresstext").replace('%',''))
 
     def Platinum(self) :
-        return int(self._findByClass("text platinum").replace('Platinum',''))
+        return int(self._findByDivClass("text platinum").replace('Platinum',''))
     
     def Gold(self) :
-        return int(self._findByClass("text gold").replace('Gold',''))
+        return int(self._findByDivClass("text gold").replace('Gold',''))
     
     def Silver(self) :
-        return int(self._findByClass("text silver").replace('Silver',''))
+        return int(self._findByDivClass("text silver").replace('Silver',''))
     
     def Bronze(self) :
-        return int(self._findByClass("text bronze").replace('Bronze',''))
+        return int(self._findByDivClass("text bronze").replace('Bronze',''))
     
     def Total(self) :
         return int(self._soup.find('div', id="totaltrophies" ).find('div', id="text").contents[0])
+
+def getClassTrophies(tag)
+    return tag['class'] == 'trophycontent' and tag.parent['class'] == 'trophycount normal'
 
 class GamesPageParser(BasePageParser):
     """
@@ -75,7 +84,34 @@ class GamesPageParser(BasePageParser):
     """
     
     def Title(self):
-        return self._soup.find('span', class_ = 'gameTitleSortField').contents[0]
+        return self._findBySpanClass('gameTitleSortField')
+    
+    def Id(self):
+        return self._soup.find('div', class_ = 'titlelogo').find('a')['href'].rsplit('/',1)[1]
+        
+    def Image(self):
+        return self._soup.find('img', href=re.compile("playstation.net/trophy"))[src]
+    
+    def Progress(self):
+        return int(self._findBySpanClass('gameProgressSortField'))
+    
+    def _getTrophieForIndex(self,index)
+        return int(self._soup.find_all('div', _class=self.getClassTrophies)[index].contents[0])
+        
+    def Platinum(self) :
+        return self._getTrophieForIndex(3)
+    
+    def Gold(self) :
+        return self._getTrophieForIndex(2)
+    
+    def Silver(self) :
+        return self._getTrophieForIndex(1)
+    
+    def Bronze(self) :
+        return self._getTrophieForIndex(0)
+    
+    def Total(self) :
+        return int(self._findBySpanClass('gameTrophyCountSortField'))
     
     def __iter__(self):
         games = []
