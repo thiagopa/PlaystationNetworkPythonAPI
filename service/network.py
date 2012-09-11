@@ -75,13 +75,32 @@ class TrophiePageParser(BasePageParser):
     def Total(self) :
         return int(self._soup.find('div', id="totaltrophies" ).find('div', id="text").contents[0])
 
-def getClassTrophies(tag)
-    return tag['class'] == 'trophycontent' and tag.parent['class'] == 'trophycount normal'
-
 class GamesPageParser(BasePageParser):
     """
         Classe que faz o Parser dos Jogos
     """
+    
+    def _getClassTrophies(self,tag):
+        
+        logger.info("Searching for tag: %s" % (tag.name))
+        
+        # Search for a div only 
+        if tag.name != 'div':
+            return False
+        try :
+            parent_tag = tag.parent.parent
+               
+            if tag.has_key('class') and parent_tag.has_key('class') :
+                logger.info("Div Tag class: %s" % (tag['class']))
+                logger.info("Parent Div Tag class: %s" % (parent_tag['class']))
+                found_tag = tag['class'][0] == u'trophycontent' and parent_tag['class'][0] == u'trophycount' and parent_tag['class'][1] == u'normal'
+                
+                logger.info("Found Tag? %s" % (found_tag))
+                return found_tag
+        except:
+            logger.warn("Broken Tag Pipe")
+            return False    
+
     
     def Title(self):
         return self._findBySpanClass('gameTitleSortField')
@@ -90,13 +109,13 @@ class GamesPageParser(BasePageParser):
         return self._soup.find('div', class_ = 'titlelogo').find('a')['href'].rsplit('/',1)[1]
         
     def Image(self):
-        return self._soup.find('img', href=re.compile("playstation.net/trophy"))[src]
+        return self._soup.find('img')['src']
     
     def Progress(self):
         return int(self._findBySpanClass('gameProgressSortField'))
     
-    def _getTrophieForIndex(self,index)
-        return int(self._soup.find_all('div', _class=self.getClassTrophies)[index].contents[0])
+    def _getTrophieForIndex(self,index) :
+        return int(self._soup.find_all(self._getClassTrophies)[index].contents[0])
         
     def Platinum(self) :
         return self._getTrophieForIndex(3)
