@@ -29,10 +29,10 @@ class BasePageParser:
         logger.info("Create BeautifulSoup for html %s" % (html))
     
     def _findById(self,id):
-        return self._soup.find('div', id=id ).contents[0]
+        return self._soup.find('div', id=id ).string
     
     def _findByElementClass(self,element,className) :
-        return self._soup.find(element, class_ = className).contents[0]
+        return self._soup.find(element, class_ = className).string
     
     def _findByDivClass(self,className):
         return self._findByElementClass('div',className)
@@ -73,7 +73,7 @@ class TrophiePageParser(BasePageParser):
         return int(self._findByDivClass("text bronze").replace('Bronze',''))
     
     def Total(self) :
-        return int(self._soup.find('div', id="totaltrophies" ).find('div', id="text").contents[0])
+        return int(self._soup.find('div', id="totaltrophies" ).find('div', id="text").string)
 
 class GamesPageParser(BasePageParser):
     """
@@ -115,7 +115,7 @@ class GamesPageParser(BasePageParser):
         return int(self._findBySpanClass('gameProgressSortField'))
     
     def _getTrophieForIndex(self,index) :
-        return int(self._soup.find_all(self._getClassTrophies)[index].contents[0])
+        return int(self._soup.find_all(self._getClassTrophies)[index].string)
         
     def Platinum(self) :
         return self._getTrophieForIndex(3)
