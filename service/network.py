@@ -26,7 +26,7 @@ class BasePageParser:
     """
     def __init__(self, html):
         self._soup = BeautifulSoup(html, "html5lib")
-        logger.info("Create BeautifulSoup for html %s" % (html))
+        logger.debug("Create BeautifulSoup for html %s" % (html))
     
     def _findById(self,id):
         return self._soup.find(id=id).string
@@ -44,10 +44,6 @@ class TrophiePageParser(BasePageParser):
     """
         Clase que faz o parser dos Troféus e do Perfil
     """
-    def __init__(self, rs):
-        self._soup = BeautifulSoup(rs)
-        logger.info("Create BeautifulSoup for response %s" % (rs))
-
     def PsnId(self):
         return self._findById("id-handle").strip()
         
@@ -82,7 +78,7 @@ class GamesPageParser(BasePageParser):
     
     def _getClassTrophies(self,tag):
         
-        logger.info("Searching for tag: %s" % (tag.name))
+        logger.debug("Searching for tag: %s" % (tag.name))
         
         # Search for a div only 
         if tag.name != 'div':
@@ -91,11 +87,11 @@ class GamesPageParser(BasePageParser):
             parent_tag = tag.parent.parent
                
             if tag.has_key('class') and parent_tag.has_key('class') :
-                logger.info("Div Tag class: %s" % (tag['class']))
-                logger.info("Parent Div Tag class: %s" % (parent_tag['class']))
+                logger.debug("Div Tag class: %s" % (tag['class']))
+                logger.debug("Parent Div Tag class: %s" % (parent_tag['class']))
                 found_tag = tag['class'][0] == u'trophycontent' and parent_tag['class'][0] == u'trophycount' and parent_tag['class'][1] == u'normal'
                 
-                logger.info("Found Tag? %s" % (found_tag))
+                logger.debug("Found Tag? %s" % (found_tag))
                 return found_tag
         except:
             logger.warn("Broken Tag Pipe")
@@ -135,7 +131,7 @@ class GamesPageParser(BasePageParser):
     def __iter__(self):
         games = []
         nodes = self._soup.find_all('div', class_ = 'slot')
-        logger.info("Found %d nodes" % len(nodes)) 
+        logger.debug("Found %d nodes" % len(nodes)) 
         for node in nodes :
             games.append(GamesPageParser(str(node)))
         return iter(games)    
@@ -160,9 +156,9 @@ class PSN:
         self._login()
 
     def _getUrl(self,url,referer=None,data=None):
-        logger.info("GET %s" % (url))
-        logger.info("Referer %s" % (referer))
-        logger.info("Data %s" % (data))
+        logger.debug("GET %s" % (url))
+        logger.debug("Referer %s" % (referer))
+        logger.debug("Data %s" % (data))
         
         headers = DEFAULT_HEADERS
         if referer is not None :
@@ -180,7 +176,7 @@ class PSN:
             pass # this just happens, but it needs to happen
 
         if rs.info().get('Content-Encoding') == 'gzip':
-            logger.info("Reponse is Gzipped, decompressing")
+            logger.debug("Reponse is Gzipped, decompressing")
             html = self._uncompress(rs)
         else :
             html = rs.read()
@@ -217,7 +213,7 @@ class PSN:
         
         # Store session id
         for cookie in self._cookie_jar:
-            logger.info('%s --> %s'%(cookie.name,cookie.value))
+            logger.debug('%s --> %s'%(cookie.name,cookie.value))
             if(cookie.name == "JSESSIONID") :
                 sess_id = cookie.value
         

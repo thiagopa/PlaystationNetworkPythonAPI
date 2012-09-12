@@ -12,9 +12,6 @@ builtins:
  
 handlers:
 
-- url: /wsdl
-  static_dir: wsdl
-
 - url: /.*
   script: PlaystationNetworkAPI_server.application
   
