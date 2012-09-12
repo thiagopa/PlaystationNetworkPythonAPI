@@ -25,11 +25,11 @@ class BasePageParser:
         Classe base para os parsers
     """
     def __init__(self, html):
-        self._soup = BeautifulSoup(html)
+        self._soup = BeautifulSoup(html, "html5lib")
         logger.info("Create BeautifulSoup for html %s" % (html))
     
     def _findById(self,id):
-        return self._soup.find('div', id=id ).string
+        return self._soup.find(id=id).string
     
     def _findByElementClass(self,element,className) :
         return self._soup.find(element, class_ = className).string
@@ -49,10 +49,10 @@ class TrophiePageParser(BasePageParser):
         logger.info("Create BeautifulSoup for response %s" % (rs))
 
     def PsnId(self):
-        return self._findById("id-handle" ).strip()
+        return self._findById("id-handle").strip()
         
     def AvatarSmall(self) :
-        return self._soup.find('div', id="id-avatar" ).find('img')['src'].split('=',1)[1]
+        return self._soup.find('div', id="id-avatar").find('img')['src'].split('=',1)[1]
         
     def Level(self) :
         return int(self._findById("leveltext" ))
@@ -181,16 +181,29 @@ class PSN:
 
         if rs.info().get('Content-Encoding') == 'gzip':
             logger.info("Reponse is Gzipped, decompressing")
-            return self._uncompress(rs)
+            html = self._uncompress(rs)
         else :
-            return rs.read()
+            html = rs.read()
+        
+        return self._fix_markup(html)
+
+    def _fix_markup(self,html):
+        """
+            Retira o xml do html, caso exista
+        """
+        html = html.lstrip()
+        if html.startswith("<?xml"):
+            html = "\n".join(html.split("\n")[1:])
+        return html    
         
     def _uncompress(self,rs):
-        # Resposta está Comprimida, devo descomprimí-la
+        """ 
+            Descomprimi uma resposta gzip
+        """
         buf = StringIO( rs.read() )
         f = gzip.GzipFile(fileobj=buf)
         return f.read()
-
+    
 
     def _login(self):
         logger.info("Logging in")

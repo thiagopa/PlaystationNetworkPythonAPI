@@ -168,7 +168,21 @@ class CrawlerService(Service):
         logger.info("Getting Trophies Page Parser")
         trophies = psn.trophies(psn_id)
         
+        logger.info("BUG FINDER")
+        logger.info("SOUP: %s" % (type(trophies._soup)))
+        
+        logger.info("SOUP PRETTIFY")
+        logger.info(trophies._soup.prettify())
+        
+        logger.info("FIND ALL")
+        
+        for tag in trophies._soup.find_all() :
+            logger.info(tag)
+        
+        logger.info("ID-HANDLE: %s" % (trophies._soup.find(id="id-handle")))
+        
         logger.info("Parsing Profile Info")
+        
         GetProfileResult.PsnId = trophies.PsnId()
         GetProfileResult.Location = location
         GetProfileResult.AvatarSmall = trophies.AvatarSmall()
