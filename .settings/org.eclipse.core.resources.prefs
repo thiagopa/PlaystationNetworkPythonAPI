@@ -1,5 +1,12 @@
 eclipse.preferences.version=1
+encoding//ZSI/TC.py=utf-8
+encoding//ZSI/twisted/wsgi.py=utf-8
 encoding//bs4/dammit.py=utf-8
 encoding//service/__init__.py=utf-8
 encoding//service/network.py=utf-8
 encoding//service/services.py=utf-8
+encoding//service/settings.py=utf-8
+encoding/PlaystationNetworkAPI_client.py=utf-8
+encoding/PlaystationNetworkAPI_server.py=utf-8
+encoding/PlaystationNetworkAPI_types.py=utf-8
+encoding/__init__.py=utf-8

@@ -13,7 +13,6 @@ targetNamespace="urn:PSN" >
 				<xsd:complexType>
 					<xsd:sequence>
 						<xsd:element minOccurs="0" maxOccurs="1" name="psnId" type="xsd:string" />
-						<xsd:element minOccurs="0" maxOccurs="1" name="location" type="xsd:string" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -26,7 +25,6 @@ targetNamespace="urn:PSN" >
 			</xsd:element>
 			<xsd:complexType name="Profile">
 				<xsd:sequence>
-					<xsd:element minOccurs="0" maxOccurs="1" name="Location" type="xsd:string" />
 					<xsd:element minOccurs="0" maxOccurs="1" name="PsnId" type="xsd:string" />
 					<xsd:element minOccurs="0" maxOccurs="1" name="AvatarSmall" type="xsd:string" />
 					<xsd:element minOccurs="1" maxOccurs="1" name="Level" nillable="true" type="xsd:int" />
@@ -77,10 +75,14 @@ targetNamespace="urn:PSN" >
 	<message name="GetProfileSoapOut">
 		<part name="parameters" element="tns:GetProfileResponse"/>
 	</message>
+	
+	<message name="UserNotFoundFault"/>
+	
 	<portType name="PlaystationNetworkAPISoap">
 		<operation name="GetProfile">
 			<input message="tns:GetProfileSoapIn"/>
 			<output message="tns:GetProfileSoapOut"/>
+			<fault name="fault" message="tns:UserNotFoundFault"/>
 		</operation>
 	</portType>
 	<binding name="PlaystationNetworkAPISoap" type="tns:PlaystationNetworkAPISoap">

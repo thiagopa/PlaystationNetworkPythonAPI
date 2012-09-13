@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## Default set of headers for requests to PSN
 DEFAULT_HEADERS = {
     'User-agent':       'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/12.04 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19',
