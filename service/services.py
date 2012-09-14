@@ -18,7 +18,7 @@ class Service:
     """
         Interface para os Outros Serviços
     """
-    def GetProfile(self,psn_id,location):
+    def GetProfile(self,psn_id):
         raise NotImplementedError( "Should have implemented this" )
     
     def GetProfileResult(self):
@@ -28,10 +28,9 @@ class DummyService(Service):
     """
         Serviço de testes que retorna sempre um resultado fixo
     """
-    def GetProfile(self,psn_id,location):
+    def GetProfile(self,psn_id):
         GetProfileResult = self.GetProfileResult()
         
-        GetProfileResult.Location = location
         GetProfileResult.PsnId = psn_id
         GetProfileResult.AvatarSmall = "http://static-resource.np.community.playstation.net/avatar_s/WWS_J/J0003_s.png"
         GetProfileResult.Level = 4
@@ -155,7 +154,7 @@ class CrawlerService(Service):
     """
         Serviço que busca as informações do site americano
     """
-    def GetProfile(self,psn_id,location):
+    def GetProfile(self,psn_id):
         logger.info("Creating new GetProfileResult")
         GetProfileResult = self.GetProfileResult()
         
@@ -174,7 +173,6 @@ class CrawlerService(Service):
         logger.info("Parsing Profile Info")
         
         GetProfileResult.PsnId = trophies.PsnId()
-        GetProfileResult.Location = location
         GetProfileResult.AvatarSmall = trophies.AvatarSmall()
         GetProfileResult.Level = trophies.Level()
         GetProfileResult.Progress = trophies.Progress()

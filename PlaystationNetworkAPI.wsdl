@@ -101,7 +101,8 @@ targetNamespace="urn:PSN" >
 	</binding>
 	<service name="PlaystationNetworkAPI">
 		<port name="PlaystationNetworkAPISoap" binding="tns:PlaystationNetworkAPISoap">
-			<soap:address location="http://psnserverapi.appspot.com/PlaystationNetworkAPI"/>
+			<!--soap:address location="http://psnserverapi.appspot.com/PlaystationNetworkAPI"/-->
+			<soap:address location="http://localhost:8080/PlaystationNetworkAPI"/>
 		</port>
 	</service>
 

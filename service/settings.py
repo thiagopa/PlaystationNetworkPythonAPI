@@ -20,3 +20,5 @@ PSN_GAMES = "http://us.playstation.com/playstation/psn/profile/%s/get_ordered_tr
 HANDLE_URL = 'http://us.playstation.com/uwps/HandleIFrameRequests?sessionId=%s'
 COOKIE_HANDLER = 'http://us.playstation.com/uwps/CookieHandler'
 PORTABLE_ID = 'http://us.playstation.com/portableid/index.htm'
+
+NO_USER_PROFILE = 'No User Profile'

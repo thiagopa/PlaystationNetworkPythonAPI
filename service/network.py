@@ -20,6 +20,16 @@ from settings import *
 
 logger = logging.getLogger(__name__)
 
+"""
+    Log dos valores retornados em tempo de execução 
+"""
+def log(f):
+    def called(*args, **kargs):
+        val = f(*args, **kargs) 
+        logger.debug("%s = %s" % (f,val))
+        return val
+    return called
+
 class BasePageParser:
     """
         Classe base para os parsers
@@ -44,30 +54,39 @@ class TrophiePageParser(BasePageParser):
     """
         Clase que faz o parser dos Troféus e do Perfil
     """
+    @log
     def PsnId(self):
         return self._findById("id-handle").strip()
-        
+    
+    @log    
     def AvatarSmall(self) :
         return self._soup.find('div', id="id-avatar").find('img')['src'].split('=',1)[1]
-        
+    
+    @log    
     def Level(self) :
         return int(self._findById("leveltext" ))
-        
+    
+    @log    
     def Progress(self) :     
         return int(self._findByDivClass("progresstext").replace('%',''))
-
+    
+    @log
     def Platinum(self) :
         return int(self._findByDivClass("text platinum").replace('Platinum',''))
     
+    @log
     def Gold(self) :
         return int(self._findByDivClass("text gold").replace('Gold',''))
     
+    @log
     def Silver(self) :
         return int(self._findByDivClass("text silver").replace('Silver',''))
     
+    @log
     def Bronze(self) :
         return int(self._findByDivClass("text bronze").replace('Bronze',''))
     
+    @log
     def Total(self) :
         return int(self._soup.find('div', id="totaltrophies" ).find('div', id="text").string)
 
@@ -97,34 +116,43 @@ class GamesPageParser(BasePageParser):
             logger.warn("Broken Tag Pipe")
             return False    
 
-    
+    @log
     def Title(self):
-        return self._findBySpanClass('gameTitleSortField')
+        return self._findBySpanClass('gameTitleSortField').encode("ascii", "ignore")
     
+    @log
     def Id(self):
         return self._soup.find('div', class_ = 'titlelogo').find('a')['href'].rsplit('/',1)[1]
-        
+    
+    @log    
     def Image(self):
         return self._soup.find('img')['src']
     
+    @log
     def Progress(self):
         return int(self._findBySpanClass('gameProgressSortField'))
     
+    @log
     def _getTrophieForIndex(self,index) :
         return int(self._soup.find_all(self._getClassTrophies)[index].string)
-        
+    
+    @log    
     def Platinum(self) :
         return self._getTrophieForIndex(3)
     
+    @log
     def Gold(self) :
         return self._getTrophieForIndex(2)
     
+    @log
     def Silver(self) :
         return self._getTrophieForIndex(1)
     
+    @log
     def Bronze(self) :
         return self._getTrophieForIndex(0)
     
+    @log
     def Total(self) :
         return int(self._findBySpanClass('gameTrophyCountSortField'))
     
@@ -227,6 +255,10 @@ class PSN:
     def trophies(self,psnId):
 
         html = self._getUrl(PSN_PROFILE % (psnId), PING_PAGE % (psnId))
+        
+        # Verify a valid user response
+        if NO_USER_PROFILE in html :
+            raise Exception("UserNotFoundFault") 
 
         return TrophiePageParser(html)
     
