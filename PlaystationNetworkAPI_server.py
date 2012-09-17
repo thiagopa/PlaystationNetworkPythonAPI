@@ -9,7 +9,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 from service.services import *
  
 class PlaystationNetworkAPIService(SOAPApplication):

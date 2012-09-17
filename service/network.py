@@ -35,7 +35,7 @@ class BasePageParser:
         Classe base para os parsers
     """
     def __init__(self, html):
-        self._soup = BeautifulSoup(html, "html5lib")
+        self._soup = BeautifulSoup(html, "html5lib", from_encoding="utf-8")
         logger.debug("Create BeautifulSoup for html %s" % (html))
     
     def _findById(self,id):
@@ -116,9 +116,12 @@ class GamesPageParser(BasePageParser):
             logger.warn("Broken Tag Pipe")
             return False    
 
+    def _getTrophieForIndex(self,index) :
+        return int(self._soup.find_all(self._getClassTrophies)[index].string)
+
     @log
     def Title(self):
-        return self._findBySpanClass('gameTitleSortField').encode("ascii", "ignore")
+        return self._findBySpanClass('gameTitleSortField').encode('ascii','xmlcharrefreplace')
     
     @log
     def Id(self):
@@ -131,10 +134,6 @@ class GamesPageParser(BasePageParser):
     @log
     def Progress(self):
         return int(self._findBySpanClass('gameProgressSortField'))
-    
-    @log
-    def _getTrophieForIndex(self,index) :
-        return int(self._soup.find_all(self._getClassTrophies)[index].string)
     
     @log    
     def Platinum(self) :
@@ -227,7 +226,6 @@ class PSN:
         buf = StringIO( rs.read() )
         f = gzip.GzipFile(fileobj=buf)
         return f.read()
-    
 
     def _login(self):
         logger.info("Logging in")
