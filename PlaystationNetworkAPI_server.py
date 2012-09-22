@@ -30,6 +30,18 @@ class PlaystationNetworkAPIService(SOAPApplication):
         response.GetProfileResult = result
         
         return request, response 
+
+    @soapmethod(GetOnlineFriendsSoapIn.typecode, GetOnlineFriendsSoapOut.typecode, operation='GetOnlineFriends', soapaction='GetOnlineFriends' )
+    def soap_GetOnlineFriends(self, request, response, **kw):
+
+        # Usado para propóstios de testes apenas ;P
+        #friends = DummyService().GetOnlineFriends()
+        
+        friends = CrawlerService().GetOnlineFriends()
+        
+        response.OnlineFriends = friends
+        
+        return request,response
     
     def _handle_GET(self, env, start_response):
         if env['QUERY_STRING'].lower() == 'wsdl':
@@ -43,3 +55,4 @@ class PlaystationNetworkAPIService(SOAPApplication):
 """    
 application = WSGIApplication()
 application['PlaystationNetworkAPI'] = PlaystationNetworkAPIService()
+

@@ -11,6 +11,8 @@ import gzip
 import os
 import sys
 import re
+from random import random
+import json
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -36,7 +38,6 @@ class BasePageParser:
     """
     def __init__(self, html):
         self._soup = BeautifulSoup(html, "html5lib", from_encoding="utf-8")
-        logger.debug("Create BeautifulSoup for html %s" % (html))
     
     def _findById(self,id):
         return self._soup.find(id=id).string
@@ -50,9 +51,9 @@ class BasePageParser:
     def _findBySpanClass(self,className) :
         return self._findByElementClass('span',className)
 
-class TrophiePageParser(BasePageParser):
+class ProfilePageParser(BasePageParser):
     """
-        Clase que faz o parser dos Troféus e do Perfil
+        Clase que faz o parser dos Perfis
     """
     @log
     def PsnId(self):
@@ -62,6 +63,18 @@ class TrophiePageParser(BasePageParser):
     def AvatarSmall(self) :
         return self._soup.find('div', id="id-avatar").find('img')['src'].split('=',1)[1]
     
+    @log
+    def Playing(self):
+        return self._findBySpanClass("_iamplaying_")
+    
+    @log
+    def isOnline(self):
+        return bool(self._soup.find('div', {'class': 'oStatus'}).find('div', {'class': 'onlineStatus online'}))
+
+class TrophiePageParser(ProfilePageParser):
+    """
+        Clase que faz o parser dos Troféus e do Perfil
+    """
     @log    
     def Level(self) :
         return int(self._findById("leveltext" ))
@@ -198,17 +211,20 @@ class PSN:
         
         try:
             rs = self._opener.open(rq, timeout=10000)
+            if rs.info().get('Content-Encoding') == 'gzip':
+                logger.debug("Reponse is Gzipped, decompressing")
+                html = self._uncompress(rs)
+            else :
+                html = rs.read()
+        
+            logger.debug("Response: %s" % (html))
+        
+            return self._fix_markup(html)
+
         except urllib2.HTTPError:
             logger.warning("Bypass HTTP ERROR")
             pass # this just happens, but it needs to happen
 
-        if rs.info().get('Content-Encoding') == 'gzip':
-            logger.debug("Reponse is Gzipped, decompressing")
-            html = self._uncompress(rs)
-        else :
-            html = rs.read()
-        
-        return self._fix_markup(html)
 
     def _fix_markup(self,html):
         """
@@ -248,7 +264,7 @@ class PSN:
         ## Hammer at a few urls for the proper cookies
         self._getUrl(TICKET_URL % (sess_id))
 
-        logger.info("Got Ticket")
+        logger.info("Got Tickets")
 
     def trophies(self,psnId):
 
@@ -265,3 +281,25 @@ class PSN:
         html = self._getUrl(PSN_GAMES % (psnId), PSN_PROFILE % (psnId))
         
         return GamesPageParser(html)
+    
+    def friends(self):
+        
+        self._getUrl(MY_FRIENDS)
+
+        self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS)
+
+        html = self._getUrl(FRIENDS_PAGE % (random()), MY_FRIENDS)
+
+        soup = BeautifulSoup(html, "html5lib", from_encoding="utf-8")
+
+        friends = []
+
+        nodes = soup.find_all('div', class_ = 'slot')
+        logger.debug("Found %d nodes" % len(nodes)) 
+        for node in nodes :
+            friends.append(ProfilePageParser(str(node)))
+            
+            #if friend.isOnline() :
+            #    friends.append(friend)
+        
+        return friends

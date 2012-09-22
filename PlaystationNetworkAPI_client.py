@@ -41,6 +41,20 @@ class PlaystationNetworkAPISoapSOAP:
         response = self.binding.Receive(GetProfileSoapOut.typecode)
         return response
 
+    # op: GetOnlineFriends
+    def GetOnlineFriends(self, request, **kw):
+        if isinstance(request, GetOnlineFriendsSoapIn) is False:
+            raise TypeError, "%s incorrect request type" % (request.__class__)
+        # no input wsaction
+        self.binding.Send(None, None, request, soapaction="GetOnlineFriends", **kw)
+        # no output wsaction
+        response = self.binding.Receive(GetOnlineFriendsSoapOut.typecode)
+        return response
+
 GetProfileSoapIn = GED("urn:PSN", "GetProfile").pyclass
 
 GetProfileSoapOut = GED("urn:PSN", "GetProfileResponse").pyclass
+
+GetOnlineFriendsSoapIn = GED("urn:PSN", "emptyElement").pyclass
+
+GetOnlineFriendsSoapOut = GED("urn:PSN", "GetOnlineFriendsResponse").pyclass

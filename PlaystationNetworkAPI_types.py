@@ -127,6 +127,48 @@ class ns0:
             Holder.__name__ = "Game_Holder"
             self.pyclass = Holder
 
+    class OnlineFriend_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
+        schema = "urn:PSN"
+        type = (schema, "OnlineFriend")
+        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+            ns = ns0.OnlineFriend_Def.schema
+            TClist = [ZSI.TC.String(pname=(ns,"PsnId"), aname="_PsnId", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname=(ns,"AvatarSmall"), aname="_AvatarSmall", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname=(ns,"Playing"), aname="_Playing", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            self.attribute_typecode_dict = attributes or {}
+            if extend: TClist += ofwhat
+            if restrict: TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            class Holder:
+                __metaclass__ = pyclass_type
+                typecode = self
+                def __init__(self):
+                    # pyclass
+                    self._PsnId = None
+                    self._AvatarSmall = None
+                    self._Playing = None
+                    return
+            Holder.__name__ = "OnlineFriend_Holder"
+            self.pyclass = Holder
+
+    class ArrayOfOnlineFriends_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
+        schema = "urn:PSN"
+        type = (schema, "ArrayOfOnlineFriends")
+        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+            ns = ns0.ArrayOfOnlineFriends_Def.schema
+            TClist = [GTD("urn:PSN","OnlineFriend",lazy=False)(pname=(ns,"OnlineFriend"), aname="_OnlineFriend", minOccurs=0, maxOccurs="unbounded", nillable=True, typed=False, encoded=kw.get("encoded"))]
+            self.attribute_typecode_dict = attributes or {}
+            if extend: TClist += ofwhat
+            if restrict: TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            class Holder:
+                __metaclass__ = pyclass_type
+                typecode = self
+                def __init__(self):
+                    # pyclass
+                    self._OnlineFriend = []
+                    return
+            Holder.__name__ = "ArrayOfOnlineFriends_Holder"
+            self.pyclass = Holder
+
     class GetProfile_Dec(ZSI.TCcompound.ComplexType, ElementDeclaration):
         literal = "GetProfile"
         schema = "urn:PSN"
@@ -181,5 +223,44 @@ class ns0:
 
             ns0.Profile_Def.__init__(self, **kw)
             if self.pyclass is not None: self.pyclass.__name__ = "Profile_Dec_Holder"
+
+    class GetOnlineFriendsResponse_Dec(ZSI.TCcompound.ComplexType, ElementDeclaration):
+        literal = "GetOnlineFriendsResponse"
+        schema = "urn:PSN"
+        def __init__(self, **kw):
+            ns = ns0.GetOnlineFriendsResponse_Dec.schema
+            TClist = [GTD("urn:PSN","ArrayOfOnlineFriends",lazy=False)(pname=(ns,"OnlineFriends"), aname="_OnlineFriends", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            kw["pname"] = ("urn:PSN","GetOnlineFriendsResponse")
+            kw["aname"] = "_GetOnlineFriendsResponse"
+            self.attribute_typecode_dict = {}
+            ZSI.TCcompound.ComplexType.__init__(self,None,TClist,inorder=0,**kw)
+            class Holder:
+                __metaclass__ = pyclass_type
+                typecode = self
+                def __init__(self):
+                    # pyclass
+                    self._OnlineFriends = None
+                    return
+            Holder.__name__ = "GetOnlineFriendsResponse_Holder"
+            self.pyclass = Holder
+
+    class emptyElement_Dec(ZSI.TCcompound.ComplexType, ElementDeclaration):
+        literal = "emptyElement"
+        schema = "urn:PSN"
+        def __init__(self, **kw):
+            ns = ns0.emptyElement_Dec.schema
+            TClist = []
+            kw["pname"] = ("urn:PSN","emptyElement")
+            kw["aname"] = "_emptyElement"
+            self.attribute_typecode_dict = {}
+            ZSI.TCcompound.ComplexType.__init__(self,None,TClist,inorder=0,**kw)
+            class Holder:
+                __metaclass__ = pyclass_type
+                typecode = self
+                def __init__(self):
+                    # pyclass
+                    return
+            Holder.__name__ = "emptyElement_Holder"
+            self.pyclass = Holder
 
 # end class ns0 (tns: urn:PSN)

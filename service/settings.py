@@ -6,6 +6,7 @@ DEFAULT_HEADERS = {
     'Accept-Encoding':  'gzip, deflate',
     'Accept-Language':  'pt-BR',
     'Connection':       'Keep-Alive',
+    'X-Requested-With': 'XMLHttpRequest',
 }
 
 PING_PAGE = "http://us.playstation.com/publictrophy/index.htm?onlinename=%s";
@@ -18,7 +19,12 @@ PSN_PROFILE = "http://us.playstation.com/playstation/psn/profiles/%s/trophies/";
 PSN_GAMES = "http://us.playstation.com/playstation/psn/profile/%s/get_ordered_trophies_data";
 
 HANDLE_URL = 'http://us.playstation.com/uwps/HandleIFrameRequests?sessionId=%s'
-COOKIE_HANDLER = 'http://us.playstation.com/uwps/CookieHandler'
+COOKIE_HANDLER = 'http://us.playstation.com/uwps/CookieHandler?cookieName=userinfo&id=%f'
 PORTABLE_ID = 'http://us.playstation.com/portableid/index.htm'
 
 NO_USER_PROFILE = 'No User Profile'
+
+GET_FRIENDS = "https://us.playstation.com/playstation/psn/get_friends?pscom=true&id=%f"
+MY_FRIENDS = "https://us.playstation.com/myfriends/"
+GET_FRIENDS_NAMES = "https://us.playstation.com/playstation/psn/profile/get_friends_names"
+FRIENDS_PAGE = "http://us.playstation.com/playstation/psn/profile/friends?id=%f"

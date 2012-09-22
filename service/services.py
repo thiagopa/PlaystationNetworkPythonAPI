@@ -21,8 +21,15 @@ class Service:
     def GetProfile(self,psn_id):
         raise NotImplementedError( "Should have implemented this" )
     
+    def GetOnlineFriends(self):
+        raise NotImplementedError( "Should have implemented this" )
+    
     def GetProfileResult(self):
         return GetProfileSoapOut().new_GetProfileResult()
+    
+    def GetOnlineFriendsResponse(self):
+        return GetOnlineFriendsSoapOut().new_OnlineFriends()
+
     
 class DummyService(Service):
     """
@@ -148,24 +155,45 @@ class DummyService(Service):
         GetProfileResult.TrophyCount = TrophyCount
         
         return GetProfileResult
+    
+    def GetOnlineFriends(self):
+       friends = self.GetOnlineFriendsResponse()
+       
+       friend = friends.new_OnlineFriend()
+       friend.PsnId = "thi_pag"
+       friend.AvatarSmall = "http://static-resource.np.community.playstation.net/avatar_s/WWS_J/J0003_s.png"
+       friend.Playing = "Skyrim"
+       
+       friends.OnlineFriend.append(friend)
+       
+       return friends
 
      
 class CrawlerService(Service):
+    
+    def __init__(self):
+        self._psn = self._psn()
+    
+    """
+        Recupera o Serviço da PSN
+    """
+    def _psn(self):
+        logger.info("Retrieving Credentials from Database")
+        psn_credential = retrieve_psn_credentials()
+        
+        logger.info("Input Credentials to PSN")
+        return PSN(email=psn_credential.email, passwd=psn_credential.password)
+
+    
     """
         Serviço que busca as informações do site americano
     """
     def GetProfile(self,psn_id):
         logger.info("Creating new GetProfileResult")
         GetProfileResult = self.GetProfileResult()
-        
-        logger.info("Retrieving Credentials from Database")
-        psn_credential = retrieve_psn_credentials()
-        
-        logger.info("Input Credentials to PSN")
-        psn = PSN(email=psn_credential.email, passwd=psn_credential.password)
-        
+
         logger.info("Getting Trophies Page Parser")
-        trophies = psn.trophies(psn_id)
+        trophies = self._psn.trophies(psn_id)
         
         logger.debug("SOUP PRETTIFY")
         logger.debug(trophies._soup.prettify())
@@ -189,7 +217,7 @@ class CrawlerService(Service):
         GetProfileResult.TrophyCount = TrophyCount
 
         logger.info("Getting Games Page Parser")
-        games = psn.games(psn_id)
+        games = self._psn.games(psn_id)
         
         PlayedGames = GetProfileResult.new_PlayedGames()
         
@@ -217,4 +245,24 @@ class CrawlerService(Service):
         GetProfileResult.PlayedGames = PlayedGames
 
         return GetProfileResult
+    
+    def GetOnlineFriends(self):
+       
+       logger.info("Creating new GetOnlineFriendsResponse")
+       response = self.GetOnlineFriendsResponse()
+       
+       logger.info("Getting Friends Page Parser")
+       friends = self._psn.friends()
+       
+       logger.info("Parsing Each Friend Online")
+       for friend in friends :
+       
+           OnlineFriend = response.new_OnlineFriend()
+           OnlineFriend.PsnId = friend.PsnId()
+           OnlineFriend.AvatarSmall = friend.AvatarSmall()
+           OnlineFriend.Playing = friend.Playing()
+           
+           response.OnlineFriend.append(OnlineFriend)
+       
+       return response
              
