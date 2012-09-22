@@ -257,13 +257,15 @@ class PSN:
         for cookie in self._cookie_jar:
             logger.debug('%s --> %s'%(cookie.name,cookie.value))
             if(cookie.name == "JSESSIONID") :
-                sess_id = cookie.value
+                self._sess_id = cookie.value
         
-        logger.info("Logged in with session ID=%s" % (sess_id))
+        logger.info("Logged in with session ID=%s" % (self._sess_id))
 
         ## Hammer at a few urls for the proper cookies
-        self._getUrl(TICKET_URL % (sess_id))
-
+        self._getUrl(TICKET_URL % (self._sess_id))
+        self._getUrl(HANDLE_URL % (self._sess_id),{})
+        self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
+        
         logger.info("Got Tickets")
 
     def trophies(self,psnId):
@@ -284,11 +286,23 @@ class PSN:
     
     def friends(self):
         
-        self._getUrl(MY_FRIENDS)
+        self._getUrl(MY_FRIENDS,US_PLAYSTATION_COM)
 
-        self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS)
-
+        self._getUrl(GET_FRIENDS % (random()), MY_FRIENDS,{})
+        
+        self._getUrl(GET_FRIENDS_NAMES, MY_FRIENDS)
+        
+        self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
+        
         html = self._getUrl(FRIENDS_PAGE % (random()), MY_FRIENDS)
+        
+        #self._login()
+
+        #self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
+        
+        #html = self._getUrl(FRIENDS_PAGE % (random(),self._sess_id), MY_FRIENDS, {})
+
+        #html = self._getUrl(FRIENDS_PAGE % (random()), MY_FRIENDS)
 
         soup = BeautifulSoup(html, "html5lib", from_encoding="utf-8")
 

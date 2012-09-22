@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="PlaystationNetworkAPI" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="PlaystationNetworkAPISoap" type="wsdl" bindingName="{urn:PSN}PlaystationNetworkAPISoap" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/wsdl/PlaystationNetworkAPI.xml"><con:part><con:url>http://localhost:8080/wsdl/PlaystationNetworkAPI.xml</con:url><con:content><![CDATA[<definitions targetNamespace="urn:PSN" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:PSN">
+<con:soapui-project activeEnvironment="Default" name="PlaystationNetworkAPI" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="PlaystationNetworkAPISoap" type="wsdl" bindingName="{urn:PSN}PlaystationNetworkAPISoap" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/PlaystationNetworkAPI?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/PlaystationNetworkAPI?wsdl"><con:part><con:url>http://localhost:8080/PlaystationNetworkAPI?wsdl</con:url><con:content><![CDATA[<definitions targetNamespace="urn:PSN" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:PSN">
   <types>
     <xsd:schema elementFormDefault="qualified" targetNamespace="urn:PSN">
       <xsd:element name="GetProfile">
         <xsd:complexType>
           <xsd:sequence>
             <xsd:element minOccurs="0" maxOccurs="1" name="psnId" type="xsd:string"/>
-            <xsd:element minOccurs="0" maxOccurs="1" name="location" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -19,7 +18,6 @@
       </xsd:element>
       <xsd:complexType name="Profile">
         <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="1" name="Location" type="xsd:string"/>
           <xsd:element minOccurs="0" maxOccurs="1" name="PsnId" type="xsd:string"/>
           <xsd:element minOccurs="0" maxOccurs="1" name="AvatarSmall" type="xsd:string"/>
           <xsd:element minOccurs="1" maxOccurs="1" name="Level" nillable="true" type="xsd:int"/>
@@ -60,6 +58,30 @@
         </xsd:sequence>
       </xsd:complexType>
       <xsd:element name="Profile" nillable="true" type="tns:Profile"/>
+      <xsd:complexType name="OnlineFriend">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="PsnId" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="AvatarSmall" type="xsd:string"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Playing" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfOnlineFriends">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="OnlineFriend" nillable="true" type="tns:OnlineFriend"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetOnlineFriendsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="OnlineFriends" type="tns:ArrayOfOnlineFriends"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="emptyElement">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
     </xsd:schema>
   </types>
   <message name="GetProfileSoapIn">
@@ -68,10 +90,22 @@
   <message name="GetProfileSoapOut">
     <part name="parameters" element="tns:GetProfileResponse"/>
   </message>
+  <message name="GetOnlineFriendsSoapIn">
+    <part name="parameters" element="tns:emptyElement"/>
+  </message>
+  <message name="GetOnlineFriendsSoapOut">
+    <part name="parameters" element="tns:GetOnlineFriendsResponse"/>
+  </message>
+  <message name="UserNotFoundFault"/>
   <portType name="PlaystationNetworkAPISoap">
     <operation name="GetProfile">
       <input message="tns:GetProfileSoapIn"/>
       <output message="tns:GetProfileSoapOut"/>
+      <fault name="fault" message="tns:UserNotFoundFault"/>
+    </operation>
+    <operation name="GetOnlineFriends">
+      <input message="tns:GetOnlineFriendsSoapIn"/>
+      <output message="tns:GetOnlineFriendsSoapOut"/>
     </operation>
   </portType>
   <binding name="PlaystationNetworkAPISoap" type="tns:PlaystationNetworkAPISoap">
@@ -85,10 +119,19 @@
         <soap:body use="literal"/>
       </output>
     </operation>
+    <operation name="GetOnlineFriends">
+      <soap:operation soapAction="GetOnlineFriends"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
   </binding>
   <service name="PlaystationNetworkAPI">
     <port name="PlaystationNetworkAPISoap" binding="tns:PlaystationNetworkAPISoap">
-      <soap:address location="http://localhost:8080/PlaystationNetworkAPI"/>
+      <soap:address location="http://psnserverapi.appspot.com/PlaystationNetworkAPI"/>
     </port>
   </service>
 </definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/PlaystationNetworkAPI</con:endpoint><con:endpoint>http://psnserverapi.appspot.com/PlaystationNetworkAPI</con:endpoint></con:endpoints><con:operation isOneWay="false" action="GetProfile" name="GetProfile" bindingOperationName="GetProfile" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/PlaystationNetworkAPI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:PSN">
@@ -99,4 +142,9 @@
          <urn:psnId >weberdls_usa</urn:psnId>
       </urn:GetProfile>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="GetProfile"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/></con:soapui-project>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="GetProfile"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="GetOnlineFriends" name="GetOnlineFriends" bindingOperationName="GetOnlineFriends" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/PlaystationNetworkAPI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:PSN">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:emptyElement/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="GetOnlineFriends"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/></con:soapui-project>

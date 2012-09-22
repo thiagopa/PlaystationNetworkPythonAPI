@@ -24,7 +24,8 @@ PORTABLE_ID = 'http://us.playstation.com/portableid/index.htm'
 
 NO_USER_PROFILE = 'No User Profile'
 
-GET_FRIENDS = "https://us.playstation.com/playstation/psn/get_friends?pscom=true&id=%f"
-MY_FRIENDS = "https://us.playstation.com/myfriends/"
-GET_FRIENDS_NAMES = "https://us.playstation.com/playstation/psn/profile/get_friends_names"
+GET_FRIENDS = "http://us.playstation.com/playstation/psn/get_friends?pscom=true&id=%f"
+MY_FRIENDS = "http://us.playstation.com/myfriends/"
+GET_FRIENDS_NAMES = "http://us.playstation.com/playstation/psn/profile/get_friends_names"
 FRIENDS_PAGE = "http://us.playstation.com/playstation/psn/profile/friends?id=%f"
+US_PLAYSTATION_COM = "http://us.playstation.com/"
