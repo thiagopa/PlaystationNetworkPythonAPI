@@ -286,11 +286,6 @@ class PSN:
         
         logger.info("Logged in with session ID=%s" % (self._sess_id))
 
-        ## Hammer at a few urls for the proper cookies
-        #self._getUrl(TICKET_URL % (self._sess_id))
-        #self._getUrl(HANDLE_URL % (self._sess_id),{})
-        #self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
-        
         logger.info("Got Tickets")
 
     def trophies(self,psnId):
@@ -320,9 +315,10 @@ class PSN:
         nodes = soup.find_all('psn_friend')
         logger.debug("Found %d nodes" % len(nodes)) 
         for node in nodes :
-            friends.append(FriendsXmlParser(str(node)))
+            friend = FriendsXmlParser(str(node))
             
-            #if friend.isOnline() :
-            #    friends.append(friend)
+            if friend.isOnline() :
+                logger.debug("Friend %s is Online" % (friend.PsnId()))
+                friends.append(friend)
         
         return friends
