@@ -286,8 +286,6 @@ class PSN:
         
         logger.info("Logged in with session ID=%s" % (self._sess_id))
 
-        logger.info("Got Tickets")
-
     def trophies(self,psnId):
 
         html = self._getUrl(PSN_PROFILE % (psnId), PING_PAGE % (psnId))
