@@ -171,24 +171,23 @@ class DummyService(Service):
      
 class CrawlerService(Service):
     
-    def __init__(self):
-        self._psn = self._psn()
-    
     """
         Recupera o Serviço da PSN
     """
-    def _psn(self):
+    def _psn(self,site):
         logger.info("Retrieving Credentials from Database")
         psn_credential = retrieve_psn_credentials()
         
         logger.info("Input Credentials to PSN")
-        return PSN(email=psn_credential.email, passwd=psn_credential.password)
-
+        return PSN(psn_credential.email, psn_credential.password, site)
     
     """
         Serviço que busca as informações do site americano
     """
     def GetProfile(self,psn_id):
+        
+        self._psn = self._psn('US')
+        
         logger.info("Creating new GetProfileResult")
         GetProfileResult = self.GetProfileResult()
 
@@ -247,6 +246,8 @@ class CrawlerService(Service):
         return GetProfileResult
     
     def GetOnlineFriends(self):
+       
+       self._psn = self._psn('UK')
        
        logger.info("Creating new GetOnlineFriendsResponse")
        response = self.GetOnlineFriendsResponse()

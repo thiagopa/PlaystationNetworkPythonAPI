@@ -51,10 +51,31 @@ class BasePageParser:
     def _findBySpanClass(self,className) :
         return self._findByElementClass('span',className)
 
-class ProfilePageParser(BasePageParser):
+class FriendsXmlParser(BasePageParser):
     """
-        Clase que faz o parser dos Perfis
+        Classe que faz o Parser do Xml dos Amigos
     """
+    @log
+    def PsnId(self):
+        return self._soup.find('onlineid').string
+    
+    @log    
+    def Playing(self) :
+        return self._soup.find('current_game').string
+    
+    @log
+    def AvatarSmall(self):
+        return UK_AVATAR_URL % (self._soup.find('current_avatar').string)
+    
+    @log
+    def isOnline(self):
+        return bool(self._soup.find('current_presence').string == 'online')
+
+class TrophiePageParser(BasePageParser):
+    """
+        Clase que faz o parser dos Troféus e do Perfil
+    """
+    
     @log
     def PsnId(self):
         return self._findById("id-handle").strip()
@@ -71,10 +92,6 @@ class ProfilePageParser(BasePageParser):
     def isOnline(self):
         return bool(self._soup.find('div', {'class': 'oStatus'}).find('div', {'class': 'onlineStatus online'}))
 
-class TrophiePageParser(ProfilePageParser):
-    """
-        Clase que faz o parser dos Troféus e do Perfil
-    """
     @log    
     def Level(self) :
         return int(self._findById("leveltext" ))
@@ -181,7 +198,7 @@ class PSN:
         Classe principal de acesso ao conteúdo do site da PSN
     """
 
-    def __init__(self, email, passwd):
+    def __init__(self, email, passwd, site):
         self._email = email
         self._passwd = passwd
 
@@ -193,9 +210,14 @@ class PSN:
         
         logger.info("Finish PSN init")
         
-        self._login()
+        if site == 'US' :
+            self._login(US_LOGIN_URL, US_LOGIN_RETURN, US_LOGIN_LANDING)
+        elif site == 'UK' :
+            self._login(UK_LOGIN_POST_URL,UK_LOGIN_RETURN_URL,UK_LOGIN_PAGE)
+        else :
+            raise Exception("Login Site %s not recognized by engine")        
 
-    def _getUrl(self,url,referer=None,data=None):
+    def _getUrl(self,url,referer=None,data=None,fix_markup=True):
         logger.debug("GET %s" % (url))
         logger.debug("Referer %s" % (referer))
         logger.debug("Data %s" % (data))
@@ -219,7 +241,10 @@ class PSN:
         
             logger.debug("Response: %s" % (html))
         
-            return self._fix_markup(html)
+            if fix_markup == True :
+                return self._fix_markup(html)
+            else :
+                return html
 
         except urllib2.HTTPError:
             logger.warning("Bypass HTTP ERROR")
@@ -243,15 +268,15 @@ class PSN:
         f = gzip.GzipFile(fileobj=buf)
         return f.read()
 
-    def _login(self):
+    def _login(self, login_url, login_return, login_landing):
         logger.info("Logging in")
 
         ## Post the login form to get a session id
         data = {'j_username': self._email,
                 'j_password': self._passwd,
-                'returnURL': LOGIN_RETURN }
+                'returnURL': login_return }
         
-        self._getUrl(LOGIN_URL,LOGIN_LANDING,data)
+        self._getUrl(login_url,login_landing,data)
         
         # Store session id
         for cookie in self._cookie_jar:
@@ -262,9 +287,9 @@ class PSN:
         logger.info("Logged in with session ID=%s" % (self._sess_id))
 
         ## Hammer at a few urls for the proper cookies
-        self._getUrl(TICKET_URL % (self._sess_id))
-        self._getUrl(HANDLE_URL % (self._sess_id),{})
-        self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
+        #self._getUrl(TICKET_URL % (self._sess_id))
+        #self._getUrl(HANDLE_URL % (self._sess_id),{})
+        #self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
         
         logger.info("Got Tickets")
 
@@ -286,32 +311,16 @@ class PSN:
     
     def friends(self):
         
-        self._getUrl(MY_FRIENDS,US_PLAYSTATION_COM)
-
-        self._getUrl(GET_FRIENDS % (random()), MY_FRIENDS,{})
+        html = self._getUrl(PSN_PERFECT_FRIENDS_XML,UK_REFERER_SESSION_ID % (self._sess_id),fix_markup=False)
         
-        self._getUrl(GET_FRIENDS_NAMES, MY_FRIENDS)
-        
-        self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
-        
-        html = self._getUrl(FRIENDS_PAGE % (random()), MY_FRIENDS)
-        
-        #self._login()
-
-        #self._getUrl(COOKIE_HANDLER % (random()), MY_FRIENDS, {})
-        
-        #html = self._getUrl(FRIENDS_PAGE % (random(),self._sess_id), MY_FRIENDS, {})
-
-        #html = self._getUrl(FRIENDS_PAGE % (random()), MY_FRIENDS)
-
         soup = BeautifulSoup(html, "html5lib", from_encoding="utf-8")
 
         friends = []
 
-        nodes = soup.find_all('div', class_ = 'slot')
+        nodes = soup.find_all('psn_friend')
         logger.debug("Found %d nodes" % len(nodes)) 
         for node in nodes :
-            friends.append(ProfilePageParser(str(node)))
+            friends.append(FriendsXmlParser(str(node)))
             
             #if friend.isOnline() :
             #    friends.append(friend)

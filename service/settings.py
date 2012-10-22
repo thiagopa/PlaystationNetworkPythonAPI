@@ -10,9 +10,9 @@ DEFAULT_HEADERS = {
 }
 
 PING_PAGE = "http://us.playstation.com/publictrophy/index.htm?onlinename=%s";
-LOGIN_LANDING = "https://account.sonyentertainmentnetwork.com/external/auth/login.action?request_locale=pt_BR&service-entity=psn&returnURL=https://br.playstation.com/bruwps/PSNTicketRetrievalGenericServlet";
-LOGIN_URL = "https://account.sonyentertainmentnetwork.com/external/auth/login!authenticate.action";
-LOGIN_RETURN = "https://br.playstation.com/bruwps/PSNTicketRetrievalGenericServlet";
+US_LOGIN_LANDING = "https://account.sonyentertainmentnetwork.com/external/auth/login.action?request_locale=pt_BR&service-entity=psn&returnURL=https://br.playstation.com/bruwps/PSNTicketRetrievalGenericServlet";
+US_LOGIN_URL = "https://account.sonyentertainmentnetwork.com/external/auth/login!authenticate.action";
+US_LOGIN_RETURN = "https://br.playstation.com/bruwps/PSNTicketRetrievalGenericServlet";
 TICKET_URL = "https://us.playstation.com/uwps/PSNTicketRetrievalGenericServlet?psnAuth=true&sessionId=%s";
 
 PSN_PROFILE = "http://us.playstation.com/playstation/psn/profiles/%s/trophies/";
@@ -29,3 +29,15 @@ MY_FRIENDS = "http://us.playstation.com/myfriends/"
 GET_FRIENDS_NAMES = "http://us.playstation.com/playstation/psn/profile/get_friends_names"
 FRIENDS_PAGE = "http://us.playstation.com/playstation/psn/profile/friends?id=%f"
 US_PLAYSTATION_COM = "http://us.playstation.com/"
+
+UK_LOGIN_PAGE = 'https://store.playstation.com/external/index.vm?returnURL=https://secure.eu.playstation.com/sign-in/confirmation/&amp;locale=en_GB'
+#UK_LOGIN_RETURN = 'https://secure.eu.playstation.com/sign-in/confirmation/&amp;locale=en_GB'
+UK_LOGIN_RETURN_URL = 'https://secure.eu.playstation.com/sign-in/confirmation/'
+
+UK_LOGIN_POST_URL = 'https://store.playstation.com/j_acegi_external_security_check?target=/external/loginDefault.action'
+
+UK_AVATAR_URL = 'https://secure.eu.playstation.com/%s'
+
+UK_REFERER_SESSION_ID = 'https://secure.eu.playstation.com/sign-in/confirmation/1350910716494huzdxbaf/?sessionId=%s'
+
+PSN_PERFECT_FRIENDS_XML = "https://secure.eu.playstation.com/ajax/mypsn/friend/presence/"
