@@ -69,7 +69,7 @@ class FriendsXmlParser(BasePageParser):
     
     @log
     def isOnline(self):
-        return bool(self._soup.find('current_presence').string == 'online')
+        return bool(self._soup.find('current_presence').string.startswith('online'))
 
 class TrophiePageParser(BasePageParser):
     """
