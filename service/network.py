@@ -315,8 +315,8 @@ class PSN:
         for node in nodes :
             friend = FriendsXmlParser(str(node))
             
-            if friend.isOnline() :
-                logger.debug("Friend %s is Online" % (friend.PsnId()))
-                friends.append(friend)
+            #if friend.isOnline() :
+            #logger.debug("Friend %s is Online" % (friend.PsnId()))
+            friends.append(friend)
         
         return friends
