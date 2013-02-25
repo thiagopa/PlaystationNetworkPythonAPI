@@ -82,7 +82,7 @@ class TrophiePageParser(BasePageParser):
     
     @log    
     def AvatarSmall(self) :
-        return self._soup.find('div', id="id-avatar").find('img')['src'].split('=',1)[1]
+        return self._soup.find('div', id="id-avatar").find('img')['src']
     
     @log
     def Playing(self):
