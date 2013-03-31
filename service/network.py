@@ -257,7 +257,7 @@ class PSN:
         # Store session id
         for cookie in self._cookie_jar:
             logger.debug('%s --> %s'%(cookie.name,cookie.value))
-            if(cookie.name == "SONYCOOKIE1") :
+            if(cookie.name == "SONYCOOKIE1" or cookie.name == "JSESSIONID") :
                 self._sess_id = cookie.value
         
         logger.info("Logged in with session ID=%s" % (self._sess_id))
