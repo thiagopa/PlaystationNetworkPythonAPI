@@ -102,15 +102,15 @@ class TrophiePageParser(BasePageParser):
     
     @log
     def Platinum(self) :
-        return int(self._findByDivClass("text platinum").replace('Platinum',''))
+        return int(self._findByDivClass("text platinum").replace('Platina',''))
     
     @log
     def Gold(self) :
-        return int(self._findByDivClass("text gold").replace('Gold',''))
+        return int(self._findByDivClass("text gold").replace('Ouro',''))
     
     @log
     def Silver(self) :
-        return int(self._findByDivClass("text silver").replace('Silver',''))
+        return int(self._findByDivClass("text silver").replace('Prata',''))
     
     @log
     def Bronze(self) :
@@ -125,45 +125,69 @@ class GamesPageParser(BasePageParser):
         Classe que faz o Parser dos Jogos
     """
     
+    def _getClassTrophies(self,tag):
+        
+        logger.debug("Searching for tag: %s" % (tag.name))
+        
+        # Search for a div only 
+        if tag.name != 'div':
+            return False
+        try :
+            parent_tag = tag.parent.parent
+               
+            if tag.has_key('class') and parent_tag.has_key('class') :
+                logger.debug("Div Tag class: %s" % (tag['class']))
+                logger.debug("Parent Div Tag class: %s" % (parent_tag['class']))
+                found_tag = tag['class'][0] == u'trophycontent' and parent_tag['class'][0] == u'trophycount' and parent_tag['class'][1] == u'normal'
+                
+                logger.debug("Found Tag? %s" % (found_tag))
+                return found_tag
+        except:
+            logger.warn("Broken Tag Pipe")
+            return False    
+
+    def _getTrophieForIndex(self,index) :
+        return int(self._soup.find_all(self._getClassTrophies)[index].string)
+    
     @log
     def Title(self):
-        return self._soup.find('a', class_ = 'title').string.encode('ascii','xmlcharrefreplace')
+        return self._findBySpanClass('gameTitleSortField').encode('ascii','xmlcharrefreplace')
     
     @log
     def Id(self):
-        return ''
+        return self._soup.find('div', class_ = 'titlelogo').find('a')['href'].rsplit('/',1)[1]
     
     @log    
     def Image(self):
-        return self._soup.find('div', class_='avatarimg').find('img')['src']
+         return self._soup.find('img')['src']
     
     @log
     def Progress(self):
-        return int(self._findBySpanClass('progressval')[:-1])
+        return int(self._findBySpanClass('gameProgressSortField'))
     
     @log    
     def Platinum(self) :
-        return int(self._soup.find('div','recentplatinum').find('span').string)
+        return self._getTrophieForIndex(3)
     
     @log
     def Gold(self) :
-        return int(self._soup.find('div','recentgold').find('span').string)
+        return self._getTrophieForIndex(2)
     
     @log
     def Silver(self) :
-        return int(self._soup.find('div','recentsilver').find('span').string)
+        return self._getTrophieForIndex(1)
     
     @log
     def Bronze(self) :
-        return int(self._soup.find('div','recentbronze').find('span').string)
+        return self._getTrophieForIndex(0)
     
     @log
     def Total(self) :
-        return int(self._findBySpanClass('totalTrophies'))
+        return int(self._findBySpanClass('gameTrophyCountSortField'))
     
     def __iter__(self):
         games = []
-        nodes = self._soup.find_all('div', class_ = 'recentitems')
+        nodes = self._soup.find_all('div', class_ = 'slot')
         logger.debug("Found %d nodes" % len(nodes)) 
         for node in nodes :
             games.append(GamesPageParser(str(node)))
@@ -186,8 +210,8 @@ class PSN:
         
         logger.info("Finish PSN init")
         
-        if site == 'US' :
-            self._login(US_LOGIN_URL, US_LOGIN_RETURN, US_LOGIN_LANDING)
+        if site == 'BR' :
+            self._login(BR_LOGIN_URL, BR_LOGIN_RETURN, BR_LOGIN_LANDING)
         elif site == 'UK' :
             self._login(UK_LOGIN_POST_URL,UK_LOGIN_RETURN_URL,UK_LOGIN_PAGE)
         else :
@@ -258,7 +282,7 @@ class PSN:
         for cookie in self._cookie_jar:
             logger.debug('%s --> %s'%(cookie.name,cookie.value))
             if(cookie.name == "SONYCOOKIE1" or cookie.name == "JSESSIONID") :
-                self._sess_id = cookie.value
+                self._sess_id = cookie.value 
         
         logger.info("Logged in with session ID=%s" % (self._sess_id))
 

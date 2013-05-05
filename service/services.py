@@ -186,7 +186,7 @@ class CrawlerService(Service):
     """
     def GetProfile(self,psn_id):
         
-        self._psn = self._psn('US')
+        self._psn = self._psn('BR')
         
         logger.info("Creating new GetProfileResult")
         GetProfileResult = self.GetProfileResult()
